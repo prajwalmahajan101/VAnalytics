@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { AuthContext } from "../Providers/AuthProvider";
+import { AuthContext } from "../providers/AuthProvider";
 import jwt from "jwt-decode";
 import { loginPostCall } from "../apis";
 import {
