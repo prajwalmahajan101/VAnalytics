@@ -1,8 +1,9 @@
 import React from 'react'
-
 function HomePage() {
   return (
-    <div>HomePage</div>
+    <div>
+      HomePage
+    </div>
   )
 }
 
