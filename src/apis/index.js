@@ -1,4 +1,4 @@
-import axios from "axios" 
+import axios from "./axios" 
 import { API_URLS } from "../utils";
 
 export const loginPostCall = (email, password) => {
