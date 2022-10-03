@@ -10,6 +10,7 @@ import {
     Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import Box from "@mui/material/Box";
 
 ChartJS.register(
     CategoryScale,
@@ -55,7 +56,7 @@ export const data = {
 };
 
 function LineGraph() {
-    return <Line options={options} data={data} />;
+    return <Box sx={{ p: 2, border: '5px solid grey' }}> <Line options={options} data={data} /></Box>;
 }
 
 export default LineGraph;

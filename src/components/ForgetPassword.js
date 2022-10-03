@@ -36,6 +36,7 @@ export default function ForgetPassword() {
   };
 
   return (
+      <div className={"backimg"}>
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <Box
@@ -45,6 +46,7 @@ export default function ForgetPassword() {
           flexDirection: "column",
           alignItems: "center",
         }}
+        className={"weightback"}
       >
         <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
           <LockOutlinedIcon />
@@ -93,5 +95,6 @@ export default function ForgetPassword() {
         </Box>
       </Box>
     </Container>
+      </div>
   );
 }

@@ -22,6 +22,11 @@ import Toolbar from "@mui/material/Toolbar";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+
+
+
 const StyledTableCell = styled(TableCell)(({theme}) => ({
     [`&.${tableCellClasses.head}`]: {
         backgroundColor: theme.palette.common.black,
@@ -42,8 +47,8 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
     },
 }));
 
-function createData(name, calories, fat, carbs, protein) {
-    return {name, calories, fat};
+function createData(NumPlate, cameraId, FilePath) {
+    return {NumPlate, cameraId, FilePath};
 }
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -52,19 +57,31 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 
 
-const rows = [
-    createData('Frozen yoghurt', 159, 6.0),
-    createData('Ice cream sandwich', 237, 9.0),
-    createData('Eclair', 262, 16.0),
-    createData('Cupcake', 305, 3.7),
-    createData('Gingerbread', 356, 16.0),
+let Testrows = [
+    createData('KA05NC1129', "001","https://www.lamborghini.com/sites/it-en/files/DAM/lamborghini/facelift_2019/models_gw/2022/08_19_urus_perf/s/gate_models_s_03_m.jpg" ),
+    createData('KA05CT1329', "001", "https://www.lamborghini.com/sites/it-en/files/DAM/lamborghini/facelift_2019/model_gw/images-s/2021/07_07/gate_family_s_01_m.jpg"),
+    createData('KA05QC1129', "003","https://www.bugatti.com/fileadmin/_processed_/sei/p63/se-image-1b8a7c167bd3c67312baf6b785410cab.jpg" ),
+    createData('KA05CB2139', "006","https://www.carblogindia.com/wp-content/uploads/2019/01/Electric-Ducati-Bike.jpg" ),
+    createData('KA05NC1359', "007","https://mir-s3-cdn-cf.behance.net/project_modules/disp/68ef5842786655.56072d7a472b0.jpg" ),
 ];
 
-const TabularData = () => {
+const TabularData = (props) => {
+    const darkTheme = createTheme({
+        palette: {
+            mode: 'dark',
+        },
+    });
+    const lightTheme = createTheme({
+        palette: {
+            mode: 'light',
+        },
+    });
     const [value, setValue] = useState(dayjs('2014-08-18T21:11:54'));
     const [value1, setValue1] = useState(dayjs('2014-08-18T21:11:54'));
     const [data, setData] = useState({});
     const [open, setOpen] = useState(false);
+    const [rows,setRows] = useState(Testrows)
+    const [main,setMain] = useState(Testrows)
 
 
     const handleChange = (newValue) => {
@@ -84,15 +101,34 @@ const TabularData = () => {
         setOpen(false);
     };
 
+    let handleSubmit = (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        const formData = {
+            numberPlate:data.get("numberPlate"),
+        }
+        if(formData.numberPlate!==""){
+            let newRowdata = main.filter((el)=>el.NumPlate===formData.numberPlate);
+            console.log(newRowdata)
+            setRows(newRowdata);
+        }
+
+        event.target.reset();
+
+    }
+
     return (
+        <Box className={"blackback"}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Box
+                component="form" onSubmit={handleSubmit} noValidate
                 sx={{
                     marginBottom: 5,
                     display: "flex",
                     flexDirection: "row-reverse",
                     alignItems: "right",
                 }}
+
             >
                 <Grid item xs={12} sm={2} sx={{ml:2}}>
                     <Button
@@ -129,14 +165,12 @@ const TabularData = () => {
                         required
                         fullWidth
                         id="numberPlate"
-                        label="Number Plate"
+                        label="Search Number Plate"
                         name="numberPlate"
                         autoFocus
                     />
                 </Grid>
             </Box>
-
-
             <TableContainer component={Paper}>
                 <Table sx={{minWidth: 700}} aria-label="customized table">
                     <TableHead>
@@ -148,16 +182,16 @@ const TabularData = () => {
                     </TableHead>
                     <TableBody>
                         {rows.map((row) => (
-                            <StyledTableRow key={row.name}>
+                            <StyledTableRow key={row.NumPlate}>
                                 <StyledTableCell component="th" scope="row">
-                                    {row.name}
+                                    {row.NumPlate}
                                 </StyledTableCell>
-                                <StyledTableCell align="right">{row.calories}</StyledTableCell>
+                                <StyledTableCell align="right">{row.cameraId}</StyledTableCell>
                                 <StyledTableCell
                                     align="right"
                                     onClick={() => {handleClickOpen(row);}}
                                 >
-                                    {row.fat}
+                                    {row.FilePath}
                                 </StyledTableCell>
                             </StyledTableRow>
                         ))}
@@ -186,19 +220,20 @@ const TabularData = () => {
                     </Toolbar>
                 </AppBar>
                 <Grid item xs={10}>
-                    <ImageList sx={{ width: 500, height: 450 }} cols={1} >
-                            <ImageListItem key={data.img}>
+                            <ImageListItem key={data.numberPlate}>
                                 <img
-                                    src={`${data.fat}?w=164&h=164&fit=crop&auto=format`}
-                                    srcSet={`${data.fat}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                                    alt={data.name}
+                                    src={`${data.FilePath}?w=164&h=164&fit=crop&auto=format`}
+                                    srcSet={`${data.FilePath}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                                    alt={data.numberPlate}
                                     loading="lazy"
+                                    style={{maxHeight:"85vh",marginTop:"20px"}}
                                 />
                             </ImageListItem>
-                    </ImageList>
                 </Grid>
             </Dialog>
         </LocalizationProvider>
+        </Box>
+
     );
 }
 

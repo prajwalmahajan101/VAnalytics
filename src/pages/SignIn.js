@@ -38,7 +38,7 @@ export default function SignIn() {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" >
       <CssBaseline />
       <Box
         sx={{
@@ -47,6 +47,7 @@ export default function SignIn() {
           flexDirection: "column",
           alignItems: "center",
         }}
+        className={"weightback"}
       >
         <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
           <LockOutlinedIcon />

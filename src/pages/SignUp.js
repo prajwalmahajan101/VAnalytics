@@ -67,6 +67,7 @@ export default function SignUp() {
                     flexDirection: "column",
                     alignItems: "center",
                 }}
+                className={"weightback"}
             >
                 <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
                     <LockOutlinedIcon />

@@ -10,7 +10,7 @@ import LineGraph from "./lineGraph"
 
 const GraphicalRepresentation = () =>{
     return(
-        <Container component="main">
+        <Container component="main" >
             <CssBaseline />
             <Box
                 sx={{
@@ -19,9 +19,10 @@ const GraphicalRepresentation = () =>{
                     flexDirection: "column",
                     alignItems: "center",
                 }}
+                className={"blackback"}
             >
                 <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={6} style={{borderWidth:"3px"}} >
                         <BarGraph />
                     </Grid>
                     <Grid item xs={12} sm={6}>

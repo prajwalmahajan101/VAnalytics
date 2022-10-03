@@ -8,6 +8,7 @@ import TabPanel from "@mui/lab/TabPanel";
 import TabularData from "../components/TabularData"
 import GraphicalRepresentation from "../components/GraphicalRepresentation";
 import NewInfo from "../components/NewInfo";
+import {createTheme, ThemeProvider} from "@mui/material/styles";
 function HomePage() {
     const [value, setValue] = React.useState("1");
 
@@ -15,14 +16,21 @@ function HomePage() {
         setValue(newValue);
     };
 
+    const darkTheme = createTheme({
+        palette: {
+            mode: "dark",
+        },
+    });
+
     return (
+        <ThemeProvider theme={darkTheme}>
         <Box sx={{ width: "100%", typography: "body1" }}>
             <TabContext value={value}>
                 <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                     <TabList onChange={handleChange} aria-label="lab API tabs example" centered>
-                        <Tab label="Graphical Representation" value="1" />
+                        <Tab label="DashBoard" value="1" />
                         <Tab label="Tabular Data" value="2" />
-                        <Tab label="New Info" value="3" />
+                        <Tab label="Live Info" value="3" />
                     </TabList>
                 </Box>
                 <TabPanel value="1">
@@ -37,6 +45,7 @@ function HomePage() {
                 </TabPanel>
             </TabContext>
         </Box>
+        </ThemeProvider>
     );
 }
 

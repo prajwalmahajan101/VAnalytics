@@ -119,6 +119,7 @@ const ResponsiveAppBar = () => {
                 open={open}
                 onClose={handleModalClose}
                 TransitionComponent={Transition}
+
             >
                 <AppBar sx={{ position: "relative" }}>
                     <Toolbar>
@@ -135,7 +136,7 @@ const ResponsiveAppBar = () => {
                         </Typography>
                     </Toolbar>
                 </AppBar>
-                <ForgetPassword />
+                <ForgetPassword/>
 
             </Dialog>
         </>
