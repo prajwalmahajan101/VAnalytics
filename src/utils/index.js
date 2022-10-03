@@ -26,3 +26,11 @@ export const removeItemFromLocalStorage = (key) => {
   }
   localStorage.removeItem(key);
 };
+
+
+export const validateInput = (inputsData) =>{
+  for( const prop in inputsData){
+    if(inputsData[prop]==="") return false;
+  }
+  return true;
+}

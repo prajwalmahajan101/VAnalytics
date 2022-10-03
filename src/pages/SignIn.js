@@ -21,7 +21,6 @@ export default function SignIn() {
     if (auth.user) {
       navigator("/home");
     }
-     // eslint-disable-next-line
   }, [auth]);
 
   const handleSubmit = (event) => {
@@ -32,8 +31,7 @@ export default function SignIn() {
     let password = data.get("password");
     auth.login(email, password).then((data) => {
       if (!data.success) {
-        console.log(data.message);
-        setErr(true);
+        setErr(data.message);
       }
       event.target.reset();
     });
@@ -56,7 +54,7 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        {err && <Alert severity="error">Wrong Email or Password</Alert>}
+        {err && <Alert severity="error">{err}</Alert>}
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
             margin="normal"
@@ -87,11 +85,6 @@ export default function SignIn() {
             Sign In
           </Button>
           <Grid container>
-              <Grid item xs>
-                <Link href="/forgotpassword" underline="none" variant="body1">
-                  Forgot password?
-                </Link>
-              </Grid>
               <Grid item>
               Don't have an account?
               <> </>

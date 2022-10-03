@@ -7,7 +7,6 @@ import NavBar from "./NavBar"
 import { useAuth } from "../hooks";
 import Box from "@mui/material/Box";
 import LinearProgress from "@mui/material/LinearProgress";
-import ForgetPassword from "../pages/ForgetPassword";
 
 function App() {
 
@@ -27,7 +26,6 @@ function App() {
     <NavBar />
     <Routes>
       <Route exact path="/" element={<SignIn />}></Route>
-      <Route exact path="/forgotpassword" element={<ForgetPassword />}></Route>
       <Route exact path="/signup" element={<SignUp />}></Route>
       <Route exact path="/home" element={<HomePage />}></Route>
     </Routes>

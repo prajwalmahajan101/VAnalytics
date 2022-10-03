@@ -16,12 +16,21 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
+import Alert from "@mui/material/Alert";
+import {useState} from "react";
+import {validateInput} from "../utils";
+import {useNavigate} from "react-router";
 
 export default function SignUp() {
+    const [err, setErr] = useState(null);
+    const [succ, setSucc] = useState(null);
+    const navigator = useNavigate();
     const handleSubmit = (event) => {
+        setErr("");
+        setSucc("");
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
+        const formData = {
             firstname: data.get("firstName"),
             surname: data.get("surname"),
             username: data.get("username"),
@@ -32,7 +41,20 @@ export default function SignUp() {
             email: data.get("email"),
             password: data.get("password"),
             confirm_password: data.get("confirm_password"),
-        });
+        };
+        if(!validateInput(formData)){
+            setErr("Fill the Form Properly");
+        }
+        else if(formData.password!==formData.confirm_password){
+            setErr("Password's don't Match");
+        }
+        else{
+            setSucc("Signed Up");
+            setTimeout(()=>{
+                navigator("/")
+            },5000);
+        }
+        event.target.reset();
     };
 
     return (
@@ -52,6 +74,7 @@ export default function SignUp() {
                 <Typography component="h1" variant="h5">
                     Sign up
                 </Typography>
+                {err && <Alert severity="error">{err}</Alert>}{succ && <Alert severity="success">{succ}</Alert>}
                 <Box
                     component="form"
                     noValidate

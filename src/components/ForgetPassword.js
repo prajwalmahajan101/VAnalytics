@@ -8,21 +8,31 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Alert from "@mui/material/Alert";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
+import {validateInput} from "../utils";
 
 export default function ForgetPassword() {
   const [err, setErr] = useState(false);
+  const [succ, setSucc] = useState(false);
   const handleSubmit = (event) => {
     event.preventDefault();
     setErr("");
     const data = new FormData(event.currentTarget);
-    console.log({
+    let inputData = {
         email : data.get("email"),
         password: data.get("password"),
-        confirmpassowrd: data.get("con_password")
+        confirm_passowrd: data.get("con_password")
 
-    })    
+    };
+    if(!validateInput(inputData)){
+        setErr("Please fill the form completely")
+    }
+    else if(inputData.password!==inputData.confirm_passowrd){
+        setErr("Passwords Don't Match")
+    }
+    else{
+        setSucc("Your Password is Reset");
+    }
+    event.target.reset();
   };
 
   return (
@@ -40,9 +50,9 @@ export default function ForgetPassword() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Forget Password
+          Reset Password
         </Typography>
-        {err && <Alert severity="error">Wrong Email or Password</Alert>}
+        {err && <Alert severity="error">{err}</Alert>}{succ && <Alert severity="success">{succ}</Alert>}
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
             margin="normal"
@@ -78,23 +88,8 @@ export default function ForgetPassword() {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Sign In
+            Reset Password
           </Button>
-          <Grid container>
-              <Grid item xs={6}>
-              Remembered Your Password?<> </>
-                <Link href="/" underline="none" variant="body1">
-                    Sign In
-                </Link>
-              </Grid>
-              <Grid item xs={6}>
-              Don't have an account?
-              <> </>
-                <Link href="/signup" underline="none" variant="body1">
-                Sign Up
-                </Link>
-              </Grid>
-            </Grid>
         </Box>
       </Box>
     </Container>
