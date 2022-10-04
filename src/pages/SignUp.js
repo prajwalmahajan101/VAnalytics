@@ -50,6 +50,11 @@ export default function SignUp() {
         }
         else{
             setSucc("Signed Up");
+
+            //
+            //API Call
+            //
+
             setTimeout(()=>{
                 navigator("/")
             },5000);

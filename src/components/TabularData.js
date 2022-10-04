@@ -16,17 +16,17 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Slide from "@mui/material/Slide";
-import {Dialog, IconButton, ImageList, ImageListItem, Stack} from "@mui/material";
+import {Dialog, IconButton, ImageListItem, Stack} from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
+import Tooltip from "@mui/material/Tooltip";
+import AddIcon from '@mui/icons-material/Add';
 import EditVehicleData from "./EditVehicleData";
+import CreateVehicleData from "./CreateVehicleData";
 
 
 
@@ -50,15 +50,15 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
     },
 }));
 
-function createData(NumPlate, cameraId, FilePath) {
-    return {NumPlate, cameraId, FilePath};
-}
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-
+function createData(NumPlate, cameraId, FilePath) {
+    return {NumPlate, cameraId, FilePath};
+}
 
 let Testrows = [
     createData('KA05NC1129', "001","https://www.lamborghini.com/sites/it-en/files/DAM/lamborghini/facelift_2019/models_gw/2022/08_19_urus_perf/s/gate_models_s_03_m.jpg" ),
@@ -68,34 +68,38 @@ let Testrows = [
     createData('KA05NC1359', "007","https://mir-s3-cdn-cf.behance.net/project_modules/disp/68ef5842786655.56072d7a472b0.jpg" ),
 ];
 
-const TabularData = (props) => {
-    const darkTheme = createTheme({
-        palette: {
-            mode: 'dark',
-        },
-    });
-    const lightTheme = createTheme({
-        palette: {
-            mode: 'light',
-        },
-    });
+const TabularData = () => {
     const [value, setValue] = useState(dayjs('2014-08-18T21:11:54'));
     const [value1, setValue1] = useState(dayjs('2014-08-18T21:11:54'));
     const [data, setData] = useState({});
     const [open, setOpen] = useState(false);
     const [rows,setRows] = useState(Testrows);
     const [main,setMain] = useState(Testrows);
-
-    const [edit,setedit] = useState(false);
+    const [create,setCreate] = useState(false);
+    const [edit,setEdit] = useState(false);
     const [editData,setEditData]= useState({});
-    const handleEditOpen = (data,id) =>{
-        setEditData(data);
-        setedit(true);
+
+    const handleCreateOpen = () =>{
+        setCreate(true);
+    }
+    const handleCreateClose = () =>{
+        setCreate(false);
     }
 
+
+
+    const handleEditOpen = (data,id) =>{
+        data.id = id;
+        setEditData(data);
+        setEdit(true);
+    }
+
+    const updateMainData = ()=>{
+        setMain(rows);
+    }
     const handleEditClose = () =>{
         setEditData({});
-        setedit(false);
+        setEdit(false);
     }
 
 
@@ -120,6 +124,14 @@ const TabularData = (props) => {
         let test = [...main];
         let deletedData = test.splice(id,1);
         console.log(deletedData);
+
+        //
+
+        //APi Call
+
+        //
+
+
         setMain(test);
         setRows(test);
     }
@@ -142,6 +154,7 @@ const TabularData = (props) => {
         event.target.reset();
 
     }
+
 
     return (
         <Box className={"blackback"}>
@@ -196,6 +209,13 @@ const TabularData = (props) => {
                         autoFocus
                     />
                 </Grid>
+                <Stack direction={"row-reverse"} sx={{marginRight:"20%"}}>
+                    <Tooltip title="Add Vehicle Data">
+                        <Button variant="outlined" endIcon={<AddIcon />} onClick={handleCreateOpen}>
+                            Add Vehicle Data
+                        </Button>
+                    </Tooltip>
+                </Stack>
             </Box>
             <TableContainer component={Paper}>
                 <Table sx={{minWidth: 700}} aria-label="customized table">
@@ -272,7 +292,15 @@ const TabularData = (props) => {
                 onClose={handleEditClose}
                 TransitionComponent={Transition}
             >
-                <EditVehicleData handleClose={handleEditClose} data={editData}/>
+                <EditVehicleData handleClose={handleEditClose} data={{...editData}} setData={setRows} updateMainData={updateMainData}/>
+            </Dialog>
+            <Dialog
+                fullScreen
+                open={create}
+                onClose={handleCreateClose}
+                TransitionComponent={Transition}
+            >
+                <CreateVehicleData handleClose={handleCreateClose} setData={setRows} updateMainData={setMain}/>
             </Dialog>
         </LocalizationProvider>
         </Box>

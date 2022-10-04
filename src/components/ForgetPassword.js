@@ -30,6 +30,9 @@ export default function ForgetPassword() {
         setErr("Passwords Don't Match")
     }
     else{
+        //
+        // API Call
+        //
         setSucc("Your Password is Reset");
     }
     event.target.reset();
