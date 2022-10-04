@@ -16,14 +16,17 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Slide from "@mui/material/Slide";
-import {Dialog, IconButton, ImageList, ImageListItem} from "@mui/material";
+import {Dialog, IconButton, ImageList, ImageListItem, Stack} from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import EditVehicleData from "./EditVehicleData";
 
 
 
@@ -80,8 +83,20 @@ const TabularData = (props) => {
     const [value1, setValue1] = useState(dayjs('2014-08-18T21:11:54'));
     const [data, setData] = useState({});
     const [open, setOpen] = useState(false);
-    const [rows,setRows] = useState(Testrows)
-    const [main,setMain] = useState(Testrows)
+    const [rows,setRows] = useState(Testrows);
+    const [main,setMain] = useState(Testrows);
+
+    const [edit,setedit] = useState(false);
+    const [editData,setEditData]= useState({});
+    const handleEditOpen = (data,id) =>{
+        setEditData(data);
+        setedit(true);
+    }
+
+    const handleEditClose = () =>{
+        setEditData({});
+        setedit(false);
+    }
 
 
     const handleChange = (newValue) => {
@@ -101,6 +116,14 @@ const TabularData = (props) => {
         setOpen(false);
     };
 
+    const handleDelete = (id) =>{
+        let test = [...main];
+        let deletedData = test.splice(id,1);
+        console.log(deletedData);
+        setMain(test);
+        setRows(test);
+    }
+
     let handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -111,6 +134,9 @@ const TabularData = (props) => {
             let newRowdata = main.filter((el)=>el.NumPlate===formData.numberPlate);
             console.log(newRowdata)
             setRows(newRowdata);
+        }
+        else if (formData.numberPlate===""){
+            setRows(main);
         }
 
         event.target.reset();
@@ -178,10 +204,11 @@ const TabularData = (props) => {
                             <StyledTableCell>Number Plate</StyledTableCell>
                             <StyledTableCell align="right">Camera Id</StyledTableCell>
                             <StyledTableCell align="right">Image Path</StyledTableCell>
+                            <StyledTableCell >Action</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.map((row) => (
+                        {rows.map((row,id) => (
                             <StyledTableRow key={row.NumPlate}>
                                 <StyledTableCell component="th" scope="row">
                                     {row.NumPlate}
@@ -193,6 +220,14 @@ const TabularData = (props) => {
                                 >
                                     {row.FilePath}
                                 </StyledTableCell>
+                                <StyledTableCell><Stack direction="column" spacing={1}>
+                                    <IconButton aria-label="edit" onClick={() => {handleEditOpen(row,id);}}>
+                                        <EditIcon />
+                                    </IconButton>
+                                    <IconButton aria-label="delete" onClick={()=>{handleDelete(id)}}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </Stack></StyledTableCell>
                             </StyledTableRow>
                         ))}
                     </TableBody>
@@ -230,6 +265,14 @@ const TabularData = (props) => {
                                 />
                             </ImageListItem>
                 </Grid>
+            </Dialog>
+            <Dialog
+                fullScreen
+                open={edit}
+                onClose={handleEditClose}
+                TransitionComponent={Transition}
+            >
+                <EditVehicleData handleClose={handleEditClose} data={editData}/>
             </Dialog>
         </LocalizationProvider>
         </Box>
