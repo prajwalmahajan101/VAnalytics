@@ -11,10 +11,12 @@ import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import Input from '@mui/material/Input';
 const CreateVehicleData = (props) =>{
-    const {handleClose,setData,updateMainData} = props
+    const {handleClose,setData} = props
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
+    const [file,setFile] = useState(null);
     const darkTheme = createTheme({
         palette: {
             mode: "dark",
@@ -38,7 +40,6 @@ const CreateVehicleData = (props) =>{
         //
 
         setData((prevData)=>[...prevData,data]);
-        updateMainData((prevData)=>[...prevData,data]);
         handleClose();
     };
 
@@ -47,6 +48,18 @@ const CreateVehicleData = (props) =>{
             mode: "light",
         },
     });
+
+    function changeFileHandler(event) {
+        const files = event.target.files;
+        setFile(files[0]);
+    }
+
+    function uploadFileHandler() {
+        const formData = new FormData();
+        formData.append("FileName", file.name);
+        formData.append("cover",file);
+    }
+
     return (
         <>
             <ThemeProvider theme={darkTheme}>
@@ -99,6 +112,26 @@ const CreateVehicleData = (props) =>{
                                     label="Camera Id"
                                     id="cameraId"
                                 />
+                                <Input
+                                    classes={".MuiInput-formControl"}
+                                    margin='dense'
+                                    sx={{mt:2,mb:2}}
+                                    required
+                                    fullWidth
+                                    type={"file"}
+                                    name="file"
+                                    label="Img"
+                                    id="file"
+                                    onChange = {changeFileHandler}
+                                ></Input>
+                                <Button
+                                    fullWidth
+                                    variant="contained"
+                                    sx={{ mt: 3, mb: 2 }}
+                                    onClick={uploadFileHandler}
+                                >
+                                    UpLoad File
+                                </Button>
                                 <TextField
                                     margin="normal"
                                     required

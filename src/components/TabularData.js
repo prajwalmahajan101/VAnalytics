@@ -21,11 +21,9 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+
 import Tooltip from "@mui/material/Tooltip";
 import AddIcon from '@mui/icons-material/Add';
-import EditVehicleData from "./EditVehicleData";
 import CreateVehicleData from "./CreateVehicleData";
 
 
@@ -56,28 +54,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function createData(NumPlate, cameraId, FilePath) {
-    return {NumPlate, cameraId, FilePath};
-}
-
-let Testrows = [
-    createData('KA05NC1129', "001","https://www.lamborghini.com/sites/it-en/files/DAM/lamborghini/facelift_2019/models_gw/2022/08_19_urus_perf/s/gate_models_s_03_m.jpg" ),
-    createData('KA05CT1329', "001", "https://www.lamborghini.com/sites/it-en/files/DAM/lamborghini/facelift_2019/model_gw/images-s/2021/07_07/gate_family_s_01_m.jpg"),
-    createData('KA05QC1129', "003","https://www.bugatti.com/fileadmin/_processed_/sei/p63/se-image-1b8a7c167bd3c67312baf6b785410cab.jpg" ),
-    createData('KA05CB2139', "006","https://www.carblogindia.com/wp-content/uploads/2019/01/Electric-Ducati-Bike.jpg" ),
-    createData('KA05NC1359', "007","https://mir-s3-cdn-cf.behance.net/project_modules/disp/68ef5842786655.56072d7a472b0.jpg" ),
-];
-
 const TabularData = () => {
     const [value, setValue] = useState(dayjs('2014-08-18T21:11:54'));
     const [value1, setValue1] = useState(dayjs('2014-08-18T21:11:54'));
     const [data, setData] = useState({});
     const [open, setOpen] = useState(false);
-    const [rows,setRows] = useState(Testrows);
-    const [main,setMain] = useState(Testrows);
+    const [rows,setRows] = useState([]);
     const [create,setCreate] = useState(false);
-    const [edit,setEdit] = useState(false);
-    const [editData,setEditData]= useState({});
 
     const handleCreateOpen = () =>{
         setCreate(true);
@@ -85,23 +68,6 @@ const TabularData = () => {
     const handleCreateClose = () =>{
         setCreate(false);
     }
-
-
-
-    const handleEditOpen = (data,id) =>{
-        data.id = id;
-        setEditData(data);
-        setEdit(true);
-    }
-
-    const updateMainData = ()=>{
-        setMain(rows);
-    }
-    const handleEditClose = () =>{
-        setEditData({});
-        setEdit(false);
-    }
-
 
     const handleChange = (newValue) => {
         setValue(newValue);
@@ -120,21 +86,6 @@ const TabularData = () => {
         setOpen(false);
     };
 
-    const handleDelete = (id) =>{
-        let test = [...main];
-        let deletedData = test.splice(id,1);
-        console.log(deletedData);
-
-        //
-
-        //APi Call
-
-        //
-
-
-        setMain(test);
-        setRows(test);
-    }
 
     let handleSubmit = (event) => {
         event.preventDefault();
@@ -142,17 +93,7 @@ const TabularData = () => {
         const formData = {
             numberPlate:data.get("numberPlate"),
         }
-        if(formData.numberPlate!==""){
-            let newRowdata = main.filter((el)=>el.NumPlate===formData.numberPlate);
-            console.log(newRowdata)
-            setRows(newRowdata);
-        }
-        else if (formData.numberPlate===""){
-            setRows(main);
-        }
-
-        event.target.reset();
-
+        console.log(formData)
     }
 
 
@@ -224,30 +165,21 @@ const TabularData = () => {
                             <StyledTableCell>Number Plate</StyledTableCell>
                             <StyledTableCell align="right">Camera Id</StyledTableCell>
                             <StyledTableCell align="right">Image Path</StyledTableCell>
-                            <StyledTableCell >Action</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.map((row,id) => (
+                        {rows.map((row) => (
                             <StyledTableRow key={row.NumPlate}>
                                 <StyledTableCell component="th" scope="row">
-                                    {row.NumPlate}
+                                    {row.Vehicle}
                                 </StyledTableCell>
-                                <StyledTableCell align="right">{row.cameraId}</StyledTableCell>
+                                <StyledTableCell align="right">{row.CameraId}</StyledTableCell>
                                 <StyledTableCell
                                     align="right"
                                     onClick={() => {handleClickOpen(row);}}
                                 >
-                                    {row.FilePath}
+                                    {row.ImagePath}
                                 </StyledTableCell>
-                                <StyledTableCell><Stack direction="column" spacing={1}>
-                                    <IconButton aria-label="edit" onClick={() => {handleEditOpen(row,id);}}>
-                                        <EditIcon />
-                                    </IconButton>
-                                    <IconButton aria-label="delete" onClick={()=>{handleDelete(id)}}>
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </Stack></StyledTableCell>
                             </StyledTableRow>
                         ))}
                     </TableBody>
@@ -288,19 +220,11 @@ const TabularData = () => {
             </Dialog>
             <Dialog
                 fullScreen
-                open={edit}
-                onClose={handleEditClose}
-                TransitionComponent={Transition}
-            >
-                <EditVehicleData handleClose={handleEditClose} data={{...editData}} setData={setRows} updateMainData={updateMainData}/>
-            </Dialog>
-            <Dialog
-                fullScreen
                 open={create}
                 onClose={handleCreateClose}
                 TransitionComponent={Transition}
             >
-                <CreateVehicleData handleClose={handleCreateClose} setData={setRows} updateMainData={setMain}/>
+                <CreateVehicleData handleClose={handleCreateClose} setData={setRows}/>
             </Dialog>
         </LocalizationProvider>
         </Box>

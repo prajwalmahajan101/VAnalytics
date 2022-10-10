@@ -4,6 +4,9 @@ export const API_URLS = {
     login: () => "/accounts/login",
     validateLogin:()=>"/accounts/ValidateLogin",
     logout:()=>"/accounts/logout",
+    resetPassword:()=>"/accounts/user/resetPassword",
+    signup : ()=>"/accounts/user/register",
+    getRecords: ()=>"/apis/GetVehicleData"
 }
 
 export const LOCALSTORAGE_TOKEN_KEY = "__web_Token__";

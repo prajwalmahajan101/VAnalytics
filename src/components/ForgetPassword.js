@@ -9,16 +9,19 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Alert from "@mui/material/Alert";
 import {validateInput} from "../utils";
+import { resetPasswordCall } from "../apis"
 
-export default function ForgetPassword() {
-  const [err, setErr] = useState(false);
-  const [succ, setSucc] = useState(false);
-  const handleSubmit = (event) => {
+export default function ForgetPassword(props) {
+  const [err, setErr] = useState(null);
+  const [succ, setSucc] = useState(null);
+
+  const { close } = props;
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setErr("");
     const data = new FormData(event.currentTarget);
     let inputData = {
-        email : data.get("email"),
+        username : data.get("username"),
         password: data.get("password"),
         confirm_passowrd: data.get("con_password")
 
@@ -33,7 +36,14 @@ export default function ForgetPassword() {
         //
         // API Call
         //
+        try{
+        await resetPasswordCall(inputData.username,inputData.password);
         setSucc("Your Password is Reset");
+        close();
+        }catch(err){
+            setErr(err.message);
+        }
+
     }
     event.target.reset();
   };
@@ -57,16 +67,16 @@ export default function ForgetPassword() {
         <Typography component="h1" variant="h5">
           Reset Password
         </Typography>
-        {err && <Alert severity="error">{err}</Alert>}{succ && <Alert severity="success">{succ}</Alert>}
+        {err && <Alert severity="error">{err}</Alert>}
+        {succ && <Alert severity="success">{succ}</Alert>}
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="username"
+            label="User Name"
+            name="username"
             autoFocus
           />
           <TextField
@@ -74,7 +84,7 @@ export default function ForgetPassword() {
             required
             fullWidth
             name="password"
-            label="Password"
+            label="New Password"
             type="password"
             id="password"
           />
@@ -83,7 +93,7 @@ export default function ForgetPassword() {
             required
             fullWidth
             name="con_password"
-            label="Confirm Password"
+            label="Confirm New Password"
             type="password"
             id="con_password"
           />

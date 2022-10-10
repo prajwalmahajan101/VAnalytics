@@ -20,12 +20,13 @@ import Alert from "@mui/material/Alert";
 import {useState} from "react";
 import {validateInput} from "../utils";
 import {useNavigate} from "react-router";
+import {singUpCall} from "../apis";
 
 export default function SignUp() {
     const [err, setErr] = useState(null);
     const [succ, setSucc] = useState(null);
     const navigator = useNavigate();
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         setErr("");
         setSucc("");
         event.preventDefault();
@@ -50,14 +51,8 @@ export default function SignUp() {
         }
         else{
             setSucc("Signed Up");
-
-            //
-            //API Call
-            //
-
-            setTimeout(()=>{
-                navigator("/")
-            },5000);
+            await singUpCall(formData);
+            navigator("/")
         }
         event.target.reset();
     };
@@ -123,9 +118,8 @@ export default function SignUp() {
                         <FormControl fullWidth>
                         <InputLabel id="demo-simple-select-helper-label">Gender *</InputLabel>
                             <Select label="Gender" labelId="demo-simple-select-helper-label" name="sex" required>
-                                <MenuItem value={"male"}>Male</MenuItem>
-                                <MenuItem value={"female"}>Female</MenuItem>
-                                <MenuItem value={"transgender"}>TranGender</MenuItem>
+                                <MenuItem value={"Male"}>Male</MenuItem>
+                                <MenuItem value={"Female"}>Female</MenuItem>
                             </Select>
                             </FormControl>
                         </Grid>

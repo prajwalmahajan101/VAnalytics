@@ -143,7 +143,7 @@ const ResponsiveAppBar = () => {
                         </Typography>
                     </Toolbar>
                 </AppBar>
-                <ForgetPassword/>
+                <ForgetPassword  close = {handleModalClose}/>
 
             </Dialog>
         </>
