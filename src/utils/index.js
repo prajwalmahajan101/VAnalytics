@@ -2,6 +2,8 @@ import { useState} from "react";
 
 export const API_URLS = {
     login: () => "/accounts/login",
+    validateLogin:()=>"/accounts/ValidateLogin",
+    logout:()=>"/accounts/logout",
 }
 
 export const LOCALSTORAGE_TOKEN_KEY = "__web_Token__";

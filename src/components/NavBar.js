@@ -13,6 +13,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 
 import ForgetPassword from "./ForgetPassword";
+import {useEffect} from "react";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -27,8 +28,14 @@ const ResponsiveAppBar = () => {
         },
     });
     const authUser = useAuth();
+    const user = authUser.user;
+    useEffect(()=>{
+        if(user){
+            setAuth(true);
+        }
+    },[user])
 
-    const [auth, setAuth] = React.useState(authUser.user === null);
+    const [auth, setAuth] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [open, setOpen] = React.useState(false);
 
@@ -50,9 +57,9 @@ const ResponsiveAppBar = () => {
 
     }
 
-    function handleLogout() {
+    const handleLogout = ()=> {
         setAuth(false);
-        auth.logout();
+        authUser.logout().then(()=>console.log("User Logged Out")).catch(err=>console.log(err));
     }
 
     return (
@@ -66,7 +73,7 @@ const ResponsiveAppBar = () => {
                                 variant="h5"
                                 noWrap
                                 component="a"
-                                href={auth.user ? "/home" : "/"}
+                                href={authUser.user ? "/home" : "/"}
                                 sx={{
                                     mr: 2,
                                     flexGrow: 1,

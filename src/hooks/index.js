@@ -1,7 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../providers/AuthProvider";
-import jwt from "jwt-decode";
-import { loginPostCall } from "../apis";
+import { loginPostCall, loginValidationCall , logoutCall} from "../apis";
 import {
   setItemInLocalStorage,
   LOCALSTORAGE_TOKEN_KEY,
@@ -16,20 +15,23 @@ export const useProvideAuth = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  useEffect( () => {
+
     const userToken = getItemFromLocalStorage(LOCALSTORAGE_TOKEN_KEY);
     if (userToken) {
-      const user = jwt(userToken);
-      user["userType"] = user.type;
-      setUser(user);
+      loginValidationCall(userToken).then(response=>{
+        let user = response.data.user;
+        setUser(user);
+
+      }).catch(err=>console.log(err));
     }
     setLoading(false);
   }, []);
 
-  const login = async (email, password) => {
+  const login = async (username, password) => {
     try {
-      let response = await loginPostCall(email, password);
-      if (response.success) {
+      let response = await loginPostCall(username, password);
+      if (response.status === 200) {
         setUser(response.data.user);
         setItemInLocalStorage(
           LOCALSTORAGE_TOKEN_KEY,
@@ -43,8 +45,10 @@ export const useProvideAuth = () => {
       return { message: e.message, success: false };
     }
   };
-  const logout = () => {
+  const logout = async () => {
     setUser(null);
+    const userToken = getItemFromLocalStorage(LOCALSTORAGE_TOKEN_KEY);
+    await logoutCall(userToken);
     removeItemFromLocalStorage(LOCALSTORAGE_TOKEN_KEY);
   };
   return {

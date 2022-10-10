@@ -4,18 +4,27 @@ import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-
 import TabularData from "../components/TabularData"
 import GraphicalRepresentation from "../components/GraphicalRepresentation";
 import NewInfo from "../components/NewInfo";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
+import {useAuth} from "../hooks";
+import {useEffect} from "react";
+import {useNavigate} from "react-router";
+
 function HomePage() {
     const [value, setValue] = React.useState("1");
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-
+    const navigator = useNavigate();
+    const authUser = useAuth();
+    useEffect(()=>{
+        if(!authUser.user){
+            navigator("/");
+        }
+    },[authUser])
     const darkTheme = createTheme({
         palette: {
             mode: "dark",

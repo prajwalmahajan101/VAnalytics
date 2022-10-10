@@ -27,9 +27,9 @@ export default function SignIn() {
     event.preventDefault();
     setErr("");
     const data = new FormData(event.currentTarget);
-    let email = data.get("email");
+    let username = data.get("username");
     let password = data.get("password");
-    auth.login(email, password).then((data) => {
+    auth.login(username, password).then((data) => {
       if (!data.success) {
         setErr(data.message);
       }
@@ -61,10 +61,9 @@ export default function SignIn() {
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="username"
+            label="User Name"
+            name="username"
             autoFocus
           />
           <TextField
