@@ -24,6 +24,7 @@ function HomePage() {
         if(!authUser.user){
             navigator("/");
         }
+        // eslint-disable-next-line
     },[authUser])
     const darkTheme = createTheme({
         palette: {
