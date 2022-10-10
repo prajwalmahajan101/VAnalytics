@@ -1,5 +1,3 @@
-import { useState} from "react";
-
 export const API_URLS = {
     login: () => "/accounts/login",
     validateLogin:()=>"/accounts/ValidateLogin",
@@ -43,16 +41,4 @@ export const validateInput = (inputsData) =>{
     if(inputsData[prop]==="") return false;
   }
   return true;
-}
-
-
-export const useFormData = (initialData) =>{
-  const [value,setValue] = useState(initialData);
-  const onChange = (event) =>{
-    setValue(event.target.value);
-  }
-  return {
-    value,
-    onChange
-  }
 }
