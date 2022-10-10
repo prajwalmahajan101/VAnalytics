@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import TabularData from "./TabularData";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import Box from "@mui/material/Box";
@@ -20,11 +19,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import dayjs from "dayjs";
 import Slide from "@mui/material/Slide";
-import {createTheme, styled, ThemeProvider} from "@mui/material/styles";
+import {styled} from "@mui/material/styles";
 import TableCell, {tableCellClasses} from "@mui/material/TableCell";
-import CssBaseline from "@mui/material/CssBaseline";
-
-
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -67,11 +63,6 @@ const Testrows = [
 
 
 const NewInfo = () =>{
-    const lightTheme = createTheme({
-        palette: {
-            mode: 'light',
-        },
-    });
     const [temp,setTemp] = useState(1);
     const [rows,setRows] = useState(Testrows)
     useEffect(()=>{
@@ -89,7 +80,7 @@ const NewInfo = () =>{
     const [value1, setValue1] = useState(dayjs('2014-08-18T21:11:54'));
     const [data, setData] = useState({});
     const [open, setOpen] = useState(false);
-    const [main,setMain] = useState(Testrows)
+    const [main,] = useState(Testrows)
     const handleChange = (newValue) => {
         setValue(newValue);
     };

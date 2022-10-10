@@ -21,6 +21,7 @@ export default function SignIn() {
     if (auth.user) {
       navigator("/home");
     }
+      // eslint-disable-next-line
   }, [auth]);
 
   const handleSubmit = (event) => {
