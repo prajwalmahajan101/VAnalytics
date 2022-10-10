@@ -44,9 +44,42 @@ export const singUpCall = (data) =>{
 }
 
 export const getRecords = (data) =>{
+    const userToken = getItemFromLocalStorage(LOCALSTORAGE_TOKEN_KEY);
     return axios.post(API_URLS.getRecords(),JSON.stringify(data),{
         headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Token '+userToken
+        }
+    })
+}
+
+export const uploadImage = (formData) =>{
+    const userToken = getItemFromLocalStorage(LOCALSTORAGE_TOKEN_KEY);
+    return axios.post(API_URLS.uploadImage(),formData,{
+        headers: {
+            'Authorization': 'Token '+userToken
+        }
+    })
+}
+
+
+export const pushVehicleData = (data) =>{
+    const userToken = getItemFromLocalStorage(LOCALSTORAGE_TOKEN_KEY);
+    return axios.post(API_URLS.createVehicleData(),JSON.stringify(data),{
+        headers: {
+            'Authorization': 'Token '+userToken,
             'Content-Type': 'application/json'
         }
     })
+}
+
+
+export const getDailyKPI= (sdate,edate) =>{
+    const userToken = getItemFromLocalStorage(LOCALSTORAGE_TOKEN_KEY);
+    return axios.get(API_URLS.dailyKPI(sdate,edate),{
+        headers: {
+            'Authorization': 'Token '+userToken
+        }
+    })
+
 }

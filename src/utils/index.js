@@ -6,7 +6,10 @@ export const API_URLS = {
     logout:()=>"/accounts/logout",
     resetPassword:()=>"/accounts/user/resetPassword",
     signup : ()=>"/accounts/user/register",
-    getRecords: ()=>"/apis/GetVehicleData"
+    getRecords: ()=>"/apis/GetVehicleData",
+    uploadImage: ()=>"/upload/image",
+    createVehicleData: () =>"/apis/PushVehicleData",
+    dailyKPI:(sdate,edate)=>`/kpis/DailyNewVehicleCount?sdate=${sdate}&edate=${edate}`
 }
 
 export const LOCALSTORAGE_TOKEN_KEY = "__web_Token__";

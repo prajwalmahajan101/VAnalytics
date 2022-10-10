@@ -9,8 +9,6 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
-import { Line } from 'react-chartjs-2';
-import Box from "@mui/material/Box";
 
 ChartJS.register(
     CategoryScale,
@@ -45,18 +43,6 @@ export const data = {
             data: [122,12,143,24,345,45,56],
             borderColor: 'rgb(255, 99, 132)',
             backgroundColor: 'rgba(255, 99, 132, 0.5)',
-        },
-        {
-            label: 'Dataset 2',
-            data: [12,122,103,124,45,120,156],
-            borderColor: 'rgb(53, 162, 235)',
-            backgroundColor: 'rgba(53, 162, 235, 0.5)',
-        },
+        }
     ],
 };
-
-function LineGraph() {
-    return <Box sx={{ p: 2, border: '5px solid grey' }}> <Line options={options} data={data} /></Box>;
-}
-
-export default LineGraph;

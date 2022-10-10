@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {styled} from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -25,8 +25,10 @@ import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 import AddIcon from '@mui/icons-material/Add';
 import CreateVehicleData from "./CreateVehicleData";
+import {getRecords} from "../apis";
+import Alert from "@mui/material/Alert";
 
-
+let API_ROOT = process.env.REACT_APP_API_ROOT;
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -55,12 +57,25 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const TabularData = () => {
-    const [value, setValue] = useState(dayjs('2014-08-18T21:11:54'));
-    const [value1, setValue1] = useState(dayjs('2014-08-18T21:11:54'));
+    const [value, setValue] = useState(dayjs(new Date()).subtract(10,'day'));
+    const [value1, setValue1] = useState(dayjs(new Date()).add(1,'day'));
     const [data, setData] = useState({});
     const [open, setOpen] = useState(false);
     const [rows,setRows] = useState([]);
     const [create,setCreate] = useState(false);
+
+    const [err,setErr] = useState(null);
+
+    useEffect(()=>{
+        const fetchData = async ()=>{
+            const edate = dayjs(new Date()).add(1,'day').format('YYYY-MM-DD');
+            const sdate = dayjs(new Date()).subtract(10,'day').format('YYYY-MM-DD');
+            const data = {edate,sdate};
+            return await getRecords(data);
+        }
+        fetchData().then(res=>setRows(res.data)).catch(err=>console.log(err));
+    },[])
+
 
     const handleCreateOpen = () =>{
         setCreate(true);
@@ -87,13 +102,25 @@ const TabularData = () => {
     };
 
 
-    let handleSubmit = (event) => {
+    let handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         const formData = {
-            numberPlate:data.get("numberPlate"),
+            NumPlate:data.get("numberPlate"),
+            sdate:value.format('YYYY-MM-DD'),
+            edate:value1.format('YYYY-MM-DD')
         }
         console.log(formData)
+        try {
+            let response = await getRecords(formData);
+            setRows(response.data);
+        }
+        catch (err){
+            setErr("Number Plate Not Found")
+            setTimeout(()=>{
+                setErr(null);
+            },5000)
+        }
     }
 
 
@@ -123,7 +150,7 @@ const TabularData = () => {
                 <Grid item xs={12} sm={5} sx={{ml:2}}>
                     <DesktopDatePicker
                         label="End desktop"
-                        inputFormat="MM/DD/YYYY"
+                        inputFormat="YYYY-MM-DD"
                         name={"edate"}
                         value={value1}
                         onChange={handleChange1}
@@ -133,7 +160,7 @@ const TabularData = () => {
                 <Grid item xs={12} sm={5} sx={{ml:2}}>
                     <DesktopDatePicker
                         label="Start Date"
-                        inputFormat="MM/DD/YYYY"
+                        inputFormat="YYYY-MM-DD"
                         name={"sdate"}
                         value={value}
                         onChange={handleChange}
@@ -159,6 +186,7 @@ const TabularData = () => {
                 </Stack>
             </Box>
             <TableContainer component={Paper}>
+                {err && <Alert severity="error">{err}</Alert>}
                 <Table sx={{minWidth: 700}} aria-label="customized table">
                     <TableHead>
                         <TableRow>
@@ -169,7 +197,7 @@ const TabularData = () => {
                     </TableHead>
                     <TableBody>
                         {rows.map((row) => (
-                            <StyledTableRow key={row.NumPlate}>
+                            <StyledTableRow key={row.TripID}>
                                 <StyledTableCell component="th" scope="row">
                                     {row.Vehicle}
                                 </StyledTableCell>
@@ -209,8 +237,8 @@ const TabularData = () => {
                 <Grid item xs={10}>
                             <ImageListItem key={data.numberPlate}>
                                 <img
-                                    src={`${data.FilePath}?w=164&h=164&fit=crop&auto=format`}
-                                    srcSet={`${data.FilePath}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                                    src={`${API_ROOT}${data.FilePath}?w=164&h=164&fit=crop&auto=format`}
+                                    srcSet={`${API_ROOT}${data.FilePath}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
                                     alt={data.numberPlate}
                                     loading="lazy"
                                     style={{maxHeight:"85vh",marginTop:"20px"}}

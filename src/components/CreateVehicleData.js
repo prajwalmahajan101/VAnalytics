@@ -12,6 +12,7 @@ import Alert from "@mui/material/Alert";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Input from '@mui/material/Input';
+import {pushVehicleData, uploadImage} from "../apis";
 const CreateVehicleData = (props) =>{
     const {handleClose,setData} = props
     const [err, setErr] = useState(null);
@@ -22,25 +23,29 @@ const CreateVehicleData = (props) =>{
             mode: "dark",
         },
     });
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         setErr("");
         setSucc("");
+
         const formData = new FormData(event.currentTarget);
+        const FilePath = await uploadFileHandler();
         let data = {
             NumPlate:formData.get("NumPlate"),
             cameraId:formData.get("cameraId"),
-            FilePath:formData.get("FilePath")
+            FilePath
+        }
+        event.target.reset();
+        try{
+            const response = await pushVehicleData(data);
+            console.log(response);
+            setData((prevData)=>[response.data,...prevData]);
+            handleClose();
+        }catch (err){
+            setErr("Error occurred while creating Vehicle")
         }
 
-        //
 
-        //APi Call
-
-        //
-
-        setData((prevData)=>[...prevData,data]);
-        handleClose();
     };
 
     const lightTheme = createTheme({
@@ -54,10 +59,17 @@ const CreateVehicleData = (props) =>{
         setFile(files[0]);
     }
 
-    function uploadFileHandler() {
-        const formData = new FormData();
-        formData.append("FileName", file.name);
-        formData.append("cover",file);
+    const uploadFileHandler = async () => {
+        try {
+            const formData = new FormData();
+            formData.append("FileName", file.name);
+            formData.append("cover", file);
+            const response = await uploadImage(formData)
+            console.log(response);
+            return response.data.cover;
+        }catch (e) {
+            setErr("Error occurred while uploading the image")
+        }
     }
 
     return (
@@ -124,22 +136,6 @@ const CreateVehicleData = (props) =>{
                                     id="file"
                                     onChange = {changeFileHandler}
                                 ></Input>
-                                <Button
-                                    fullWidth
-                                    variant="contained"
-                                    sx={{ mt: 3, mb: 2 }}
-                                    onClick={uploadFileHandler}
-                                >
-                                    UpLoad File
-                                </Button>
-                                <TextField
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    name="FilePath"
-                                    label="Img Path"
-                                    id="FilePath"
-                                />
                                 <Button
                                     type="submit"
                                     fullWidth
